@@ -110,7 +110,7 @@ object moduleImpl {
     def filterEffectVals(trees: Template): List[ValDef]  =
       trees.collect { case v: ValDef if v.mods.hasFlag(Flag.DEFERRED) => v }
 
-    lazy val LL = freshTypeName("LL$")
+    val LL = freshTypeName("LL$")
 
     def toImplArg(effVal: ValDef): ValDef = effVal match {
       case q"$mods val $name: $eff[$ff, ..$args]" =>
@@ -121,6 +121,7 @@ object moduleImpl {
       val mod = userTrait.name
       val effVals: List[ValDef] = filterEffectVals(userTrait.impl)
 
+      val tns = userTrait.tparams.tail.map(_.name)
       val AA = freshTypeName("AA$")
       val ev = freshTermName("ev$")
       val xx = freshTermName("xx$")
@@ -136,11 +137,11 @@ object moduleImpl {
 
           type Op[$AA] = $xx.Op[$AA]
 
-          class To[$LL[_]](implicit ..$effArgs) extends $mod[$LL]
+          class To[$LL[_]](implicit ..$effArgs) extends $mod[$LL, ..$tns]
 
-          implicit def to[$LL[_]](implicit ..$effArgs): $mod[$LL] = new To[$LL]()
+          implicit def to[$LL[_]](implicit ..$effArgs): To[$LL] = new To[$LL]()
 
-          def apply[$LL[_]](implicit $ev: $mod[$LL]): $mod[$LL] = $ev
+          def apply[$LL[_]](implicit $ev: $mod[$LL, ..$tns]): $mod[$LL, ..$tns] = $ev
         }
       """
     }
