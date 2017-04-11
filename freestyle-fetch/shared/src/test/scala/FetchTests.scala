@@ -61,6 +61,18 @@ class FetchTests extends AsyncWordSpec with Matchers {
       program.exec[Future] map { _ shouldBe "111" }
     }
 
+    "allow a fetch to be run and return the result and/or environment with or without cache" in {
+      val fetch = fetchString(1)
+      val cache = InMemoryCache.empty
+
+      "app.fetchM.runA(fetch)" should compile
+      "app.fetchM.runE(fetch)" should compile
+      "app.fetchM.runF(fetch)" should compile
+      "app.fetchM.runAWithCache(fetch, cache)" should compile
+      "app.fetchM.runEWithCache(fetch, cache)" should compile
+      "app.fetchM.runFWithCache(fetch, cache)" should compile
+    }
+
   }
 
 }

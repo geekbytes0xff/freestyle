@@ -153,9 +153,7 @@ lazy val freestyleConfig = (project in file("freestyle-config"))
     compile in Test := ((compile in Test) dependsOn fixResources).value
   )
   .settings(
-    libraryDependencies ++= Seq(
-      %("config", "1.2.1")
-    )
+    libraryDependencies += %("config", "1.2.1")
   )
 
 lazy val freestyleFetch = (crossProject in file("freestyle-fetch"))
@@ -243,8 +241,8 @@ lazy val docs = (project in file("docs"))
   .settings(
     libraryDependencies ++= Seq(
       %%("doobie-h2-cats"),
-      %%("http4s-dsl"),
-      "com.h2database" % "h2" % "1.4.194" % "test"
+      %%("http4s-dsl")//,
+      // "com.h2database" % "h2" % "1.4.194" % "test"
     )
   )
   .enablePlugins(MicrositesPlugin)
